@@ -5,12 +5,21 @@ module.exports.userAdd = async (req, res) => {
 
   const { email, password, conf_password } = req.body;
   console.log("param found in req body");
-
-  const add = await userModel.create({
-    email,
-    password,
-    conf_password,
-  });
+  // var add = {};
+  // validation--------------------------------------
+  if (email.length > 6) {
+    var add = await userModel.create({
+      email,
+      password,
+      conf_password,
+    });
+  } else {
+    console.log("length < 6");
+    return res.status(400).send({
+      message: "length < 6",
+    });
+  }
+//----------------------------------------------------
 
   if (add) {
     res.status(201).send({
@@ -85,20 +94,20 @@ module.exports.userDelete = async (req, res) => {
 module.exports.userUpdate = async (req, res) => {
   const { id } = req.query;
   const { email, password, conf_password } = req.body;
-  
+
   // const id = 12345;
   console.log("This is req to Update User =>", req.query);
 
   console.log("param found in req body", id);
   console.log("new data", req.body);
-  
+
   try {
     const updatedUser = await userModel.findByIdAndUpdate(id, {
       email,
       password,
       conf_password,
     });
-   
+
     console.log("myUser updated", updatedUser);
 
     if (updatedUser) {
